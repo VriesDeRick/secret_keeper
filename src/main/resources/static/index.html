@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+
+<h1>Beautiful guesser front-end</h1>
+
+<h2>Guess existing secret</h2>
+<form name="guesser">
+    <label for="guessSecretId">Guess ID:</label><br>
+    <input type="text" id="guessSecretId" name="id" value=""><br>
+    <label for="guessSecretGuess">Guess:</label><br>
+    <input type="text" id="guessSecretGuess" name="secret" value="very secret string"><br><br>
+    <input type="button" value="Submit" id="guessSecretSubmit">
+</form>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        // click on button submit
+        $("#guessSecretSubmit").on('click', function(){
+            console.log("Submitting form");
+            var id = document.getElementById("guessSecretId").value;
+            var guess = document.getElementById("guessSecretGuess").value;
+            $.ajax({
+                type: "POST",
+                url: "secrets/" + id,
+                data: JSON.stringify({"guess" : guess}),
+                success: function(){ console.log("success")},
+                dataType: "json",
+                contentType : "application/json"
+            })
+        });
+    });
+</script>
+
+<h2>Add new secret</h2>
+<form name="secretAdder">
+    <label for="addSecretUserId">User ID:</label><br>
+    <input type="text" id="addSecretUserId" name="id" value=""><br>
+    <label for="addSecretSecret">New secret:</label><br>
+    <input type="text" id="addSecretSecret" name="secret" value="very secret string"><br><br>
+    <input type="button" value="Submit" id="addSecretSubmit">
+</form>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        // click on button submit
+        $("#addSecretSubmit").on('click', function(){
+            console.log("Submitting form");
+            var id = document.getElementById("addSecretUserId").value;
+            var secret = document.getElementById("addSecretSecret").value;
+            $.ajax({
+                type: "POST",
+                url: "secrets/",
+                data: JSON.stringify({"userId": id, "secret" : secret}),
+                success: function(){},
+                dataType: "json",
+                contentType : "application/json"
+            })
+        });
+    });
+</script>
+
+<h2>Add new user</h2>
+<form name="userAdder">
+    <label for="addUserName">New name:</label><br>
+    <input type="text" id="addUserName" name="name" value="Piet Snot"><br>
+    <label for="addUserEmail">New email:</label><br>
+    <input type="text" id="addUserEmail" name="email" value="p.k.snot@student.utwente.nl"><br><br>
+    <input type="button" value="Submit" id="addUserSubmit">
+</form>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        // click on button submit
+        $("#addUserSubmit").on('click', function(){
+            console.log("Submitting form");
+            var name = document.getElementById("addUserName").value;
+            var email = document.getElementById("addUserEmail").value;
+            $.ajax({
+                type: "POST",
+                url: "users/",
+                data: JSON.stringify({"name": name, "email" : email}),
+                success: function(){},
+                dataType: "json",
+                contentType : "application/json"
+            })
+        });
+    });
+</script>
+
+<h2>Update existing user</h2>
+<form name="userUpdater">
+    <label for="updateUserName">Existing ID:</label><br>
+    <input type="text" id="updateUserId" name="id" value="2"><br>
+    <label for="updateUserName">Updated name:</label><br>
+    <input type="text" id="updateUserName" name="name" value="Piet Snot"><br>
+    <label for="updateUserEmail">Updated email:</label><br>
+    <input type="text" id="updateUserEmail" name="email" value="p.k.snot@student.utwente.nl"><br><br>
+    <label for="updateUserSecrets">Existing secrets (comma-separated):</label><br>
+    <input type="text" id="updateUserSecrets" name="name" value="a,b,c"><br>
+
+
+    <input type="button" value="Submit" id="updateUserSubmit">
+
+</form>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        // click on button submit
+        $("#updateUserSubmit").on('click', function(){
+            console.log("Submitting form");
+            var id = document.getElementById("updateUserId").value;
+            var name = document.getElementById("updateUserName").value;
+            var email = document.getElementById("updateUserEmail").value;
+            var secrets = document.getElementById("updateUserSecrets").value;
+            $.ajax({
+                type: "PUT",
+                url: "users/" + id,
+                data: JSON.stringify({"name": name, "email" : email, "secrets" : secrets.split(',')}),
+                success: function(){},
+                dataType: "json",
+                contentType : "application/json"
+            })
+        });
+    });
+</script>
+
+
+</body>
+</html>
