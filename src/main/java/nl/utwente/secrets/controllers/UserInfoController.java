@@ -25,9 +25,9 @@ public class UserInfoController {
         this.userService = userService;
     }
 
-    @GetMapping(path = "/all")
-    public List<String> getAllNames() {
-        return userService.getAllUsers().stream().map(User::getEmail).collect(Collectors.toList());
+    @GetMapping(path = "/")
+    public List<UserDto> getAllUsers() {
+        return userService.getAllUsers().stream().map(UserDto::new).collect(Collectors.toList());
     }
 
     @PostMapping(path = "/")

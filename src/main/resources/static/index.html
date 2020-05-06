@@ -128,6 +128,44 @@
     });
 </script>
 
+<h2>Other queries</h2>
+
+<button type="button" id="getAllUsers">Get all users</button>
+<script type="text/javascript">
+    $(document).ready(function(){
+        // click on button submit
+        $("#getAllUsers").on('click', function(){
+
+            $.ajax({
+                type: "GET",
+                url: "users/",
+                data: {},
+                success: function(){},
+                dataType: "json",
+                contentType : "application/json"
+            })
+        });
+    });
+</script>
+
+<button type="button" id="getAllSecrets">Get all secrets</button>
+<script type="text/javascript">
+    $(document).ready(function(){
+        // click on button submit
+        $("#getAllSecrets").on('click', function(){
+
+            $.ajax({
+                type: "GET",
+                url: "secrets/",
+                data: {},
+                success: function(){},
+                dataType: "json",
+                contentType : "application/json"
+            })
+        });
+    });
+</script>
+
 
 </body>
 </html>
