@@ -14,7 +14,7 @@ repositories {
 
 dependencies {
 
-	def springAopVersion = '5.0.4.RELEASE'
+	def springAopVersion = '5.2.6.RELEASE'
 
 	compile "org.springframework:spring-aop:${springAopVersion}"
 	compile 'org.aspectj:aspectjweaver:1.8.13'
