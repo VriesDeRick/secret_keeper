@@ -51,13 +51,16 @@ public class LoggerAspect {
      */
     @Around("dataControllersPointcut()")
     public Object logControllers(ProceedingJoinPoint joinPoint) throws Throwable{
-        log.info("[CNTRL] Received {} query at {}",joinPoint.getSignature().getName(),ZonedDateTime.now());
+        String invokedMethod = joinPoint.getSignature().getName(); // get method name
+        log.info("[CNTRL] Received {} query at {}",invokedMethod,ZonedDateTime.now());
         try {
-            String invokedClass = joinPoint.getSignature().getDeclaringTypeName();
-            log.info("[CNTRL] Request processed by {}",joinPoint.getTarget().getClass());
+            log.info("[CNTRL/{}] Request processed by {}",invokedMethod,joinPoint.getTarget().getClass());
+            log.info("[CNTRL/{}] Query received from IP {}",invokedMethod,
+                    ControllerUtils.getCurrentHttpRequest().getRemoteAddr());
+            long start = System.currentTimeMillis(); // get start time
             Object result = joinPoint.proceed(); // invoke the method
-            log.info("[CNTRL] Query received from IP {}", ControllerUtils.getCurrentHttpRequest().getRemoteAddr());
-            log.info("[CNTRL] Execution result: {}",result.getClass().getSimpleName());
+            long executionTime = System.currentTimeMillis() - start; // measure execution time
+            log.info("[CNTRL/{}] Executed in {} ms",invokedMethod,executionTime);
             return result;
         }catch (Exception e){
             throw e;
@@ -72,9 +75,19 @@ public class LoggerAspect {
      */
     @Around("servicesPointcut()")
     public Object logService(ProceedingJoinPoint joinPoint) throws Throwable{
-        log.info("[SRV] Method {} called at {}",joinPoint.getSignature().getName(),ZonedDateTime.now());
+        String invokedMethod = joinPoint.getSignature().getName();
+        log.info("[SRV] Method {} called at {}",invokedMethod,ZonedDateTime.now());
         try {
             Object result = joinPoint.proceed(); // invoke the method
+            // error cases that don't throw an exception
+            switch (invokedMethod){
+                case "checkSecretById":
+                    if (!(boolean)result){
+                        log.warn("[SRV] Hash check failed: secret does not match!");
+                    }
+                    break;
+                default:
+            }
             return result;
         }catch (Exception e){
             throw e;
