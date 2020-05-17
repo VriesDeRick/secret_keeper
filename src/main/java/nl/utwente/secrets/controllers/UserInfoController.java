@@ -1,6 +1,7 @@
 package nl.utwente.secrets.controllers;
 
 
+import nl.utwente.secrets.Logger;
 import nl.utwente.secrets.entities.User;
 import nl.utwente.secrets.representations.user.UserAddDto;
 import nl.utwente.secrets.representations.user.UserDto;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 @Transactional
 public class UserInfoController {
 
+    private Logger logger = new Logger();
     private final UserService userService;
 
     public UserInfoController(@Autowired UserService userService) {
@@ -27,18 +29,27 @@ public class UserInfoController {
 
     @GetMapping(path = "/")
     public List<UserDto> getAllUsers() {
-        return userService.getAllUsers().stream().map(UserDto::new).collect(Collectors.toList());
+        long startTime = System.currentTimeMillis();
+        List<UserDto> result = userService.getAllUsers().stream().map(UserDto::new).collect(Collectors.toList());
+        logger.cntrlLog("getAllUsers", System.currentTimeMillis() - startTime);
+        return result;
     }
 
     @PostMapping(path = "/")
     public UserDto addUser(@RequestBody UserAddDto dto) {
+        long startTime = System.currentTimeMillis();
         User user = userService.addUser(dto.getName(), dto.getEmail());
-        return new UserDto(user);
+        UserDto result = new UserDto(user);
+        logger.cntrlLog("addUser", System.currentTimeMillis() - startTime);
+        return result;
     }
 
     @PutMapping(path = "/{id}")
     public UserDto updateUser(@PathVariable long id, @RequestBody UserUpdateDto dto) {
-        return new UserDto(userService.updateUser(id, dto.getName(), dto.getEmail(), dto.getSecrets()));
+        long startTime = System.currentTimeMillis();
+        UserDto result = new UserDto(userService.updateUser(id, dto.getName(), dto.getEmail(), dto.getSecrets()));
+        logger.cntrlLog("updateUser", System.currentTimeMillis() - startTime);
+        return result;
     }
 
 
