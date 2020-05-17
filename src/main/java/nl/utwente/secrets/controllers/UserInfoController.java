@@ -30,26 +30,32 @@ public class UserInfoController {
     @GetMapping(path = "/")
     public List<UserDto> getAllUsers() {
         long startTime = System.currentTimeMillis();
-        List<UserDto> result = userService.getAllUsers().stream().map(UserDto::new).collect(Collectors.toList());
-        logger.cntrlLog("getAllUsers", System.currentTimeMillis() - startTime);
-        return result;
+        try {
+            return userService.getAllUsers().stream().map(UserDto::new).collect(Collectors.toList());
+        } finally {
+            logger.cntrlLog("getAllUsers", System.currentTimeMillis() - startTime);
+        }
     }
 
     @PostMapping(path = "/")
     public UserDto addUser(@RequestBody UserAddDto dto) {
         long startTime = System.currentTimeMillis();
-        User user = userService.addUser(dto.getName(), dto.getEmail());
-        UserDto result = new UserDto(user);
-        logger.cntrlLog("addUser", System.currentTimeMillis() - startTime);
-        return result;
+        try {
+            User user = userService.addUser(dto.getName(), dto.getEmail());
+            return new UserDto(user);
+        } finally {
+            logger.cntrlLog("addUser", System.currentTimeMillis() - startTime);
+        }
     }
 
     @PutMapping(path = "/{id}")
     public UserDto updateUser(@PathVariable long id, @RequestBody UserUpdateDto dto) {
         long startTime = System.currentTimeMillis();
-        UserDto result = new UserDto(userService.updateUser(id, dto.getName(), dto.getEmail(), dto.getSecrets()));
-        logger.cntrlLog("updateUser", System.currentTimeMillis() - startTime);
-        return result;
+        try {
+            return new UserDto(userService.updateUser(id, dto.getName(), dto.getEmail(), dto.getSecrets()));
+        } finally {
+            logger.cntrlLog("updateUser", System.currentTimeMillis() - startTime);
+        }
     }
 
 

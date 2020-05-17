@@ -37,26 +37,32 @@ public class SecretController {
     @PostMapping(path = "/{id}")
     public boolean guessSecret(@PathVariable long id, @RequestBody SecretGuessDto dto) {
         long startTime = System.currentTimeMillis();
-        boolean result = secretService.checkSecretById(id, dto.getGuess());
-        logger.cntrlLog("guessSecret", System.currentTimeMillis() - startTime);
-        return result;
+        try {
+            return secretService.checkSecretById(id, dto.getGuess());
+        } finally {
+            logger.cntrlLog("guessSecret", System.currentTimeMillis() - startTime);
+        }
     }
 
     @GetMapping(path = "/")
     public List<SecretDtoFull> getAllSecrets() {
         long startTime = System.currentTimeMillis();
-        List<SecretDtoFull> result = secretService.getAllSecrets().stream().map(SecretDtoFull::new).collect(Collectors.toList());
-        logger.cntrlLog("getAllSecrets", System.currentTimeMillis() - startTime);
-        return result;
+        try {
+            return secretService.getAllSecrets().stream().map(SecretDtoFull::new).collect(Collectors.toList());
+        } finally {
+            logger.cntrlLog("getAllSecrets", System.currentTimeMillis() - startTime);
+        }
     }
 
     @PostMapping(path = "/")
     public SecretDtoFull addSecret(@RequestBody SecretAddDto dto) {
         long startTime = System.currentTimeMillis();
-        Secret secret = secretService.addSecret(userService.getUserById(dto.getUserId()), dto.getSecret());
-        SecretDtoFull result = new SecretDtoFull(secret);
-        logger.cntrlLog("addSecret", System.currentTimeMillis() - startTime);
-        return result;
+        try {
+            Secret secret = secretService.addSecret(userService.getUserById(dto.getUserId()), dto.getSecret());
+            return new SecretDtoFull(secret);
+        } finally {
+            logger.cntrlLog("addSecret", System.currentTimeMillis() - startTime);
+        }
     }
 
 
