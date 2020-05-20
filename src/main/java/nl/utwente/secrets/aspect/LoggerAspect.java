@@ -24,10 +24,11 @@ public class LoggerAspect {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     /**
-     * Match data controllers in the demonstrator
+     * Match API endpoints defined in the controllers
      */
-    @Pointcut("within(nl.utwente.secrets.controllers.SecretController)"+
-                " || within(nl.utwente.secrets.controllers.UserInfoController)")
+    @Pointcut("@annotation(org.springframework.web.bind.annotation.GetMapping) || " +
+            "@annotation(org.springframework.web.bind.annotation.PostMapping) || " +
+            "@annotation(org.springframework.web.bind.annotation.PutMapping)")
     public void dataControllersPointcut(){}
 
     /**
